@@ -4,7 +4,10 @@ class Solution(object):
         :type nums: List[int]
         :rtype: int
         """
+        if len(nums) == 0:
+        	return nums[0]
         threshold = int(len(nums)/2)
+        if threshold == 0
         hTable = {}
         for item in nums:
         	if item in hTable:
