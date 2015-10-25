@@ -41,6 +41,7 @@ def createBinaryTree(nodelist):
 	if l == 0:
 		return None
 
-
-n = [1,2,3]
-bst = createBinaryTree(n)
+if __name__ == '__main__':
+# main()
+	n = [1,2,3]
+	bst = createBinaryTree(n)
