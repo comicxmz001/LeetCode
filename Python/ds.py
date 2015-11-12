@@ -25,6 +25,7 @@ def printList(head):
 		while head:
 			print head.val
 			head = head.next
+		print "END OF LIST"
 		return 
 
 # Definition for a binary tree node.
