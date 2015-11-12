@@ -1,3 +1,4 @@
 *.pdf
 Python/Untitled.ipynb
 Python/.ipynb_checkpoints/Untitled-checkpoint.ipynb
+*.pyc
