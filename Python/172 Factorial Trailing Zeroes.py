@@ -16,3 +16,6 @@ class Solution(object):
 if __name__ == '__main__':
 	print Solution().trailingZeroes(25)
 	# 1808548329
+	n = 2
+	a = [1,2,3,4]
+	print a[-n:]+a[:n]
