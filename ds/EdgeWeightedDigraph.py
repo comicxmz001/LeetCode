@@ -62,7 +62,7 @@ class SP(object):
 		# type e : DirectedEdges()
 		v = e.fromV()
 		w = e.toV()
-		if self.__distTo[v] + e.weight() > self.__distTo[w]:
+		if self.__distTo[w] > self.__distTo[v] + e.weight():
 			self.__distTo[w] = self.__distTo[v] + e.weight()
 			self.__edgeTo[w] = e
 
