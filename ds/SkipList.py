@@ -8,14 +8,13 @@ class SkipList(object):
 		def __init__(self, value, level):
 			self.Value = value
 			self.Next = [None] * level
-			self.level = level
+			self.Level = level
 
-	def __init__(self):
-		self._rand = 0
-		self._levels = 1
-		self.maxLevel = 33 # set maximum level to 33
-		self._head = self.Node(0, self.maxLevel)
-		self._n = 0 
+	def __init__(self, MaxLevel):
+		self.levels = 1
+		self.maxLevel = MaxLevel # set maximum level to 33
+		self.head = self.Node(0, self.maxLevel)
+		self.n = 0 
 
 	
 	def insert(self, value):
@@ -23,32 +22,16 @@ class SkipList(object):
 		node = self.Node(value, self._randLevel())
 
 		# find a proper position
-		currHead = self._head
-		updated = [None] * self.maxLevel
-
-		for i in xrange(self._levels - 1, -1, -1): # from top to bottom
-			while currHead.Next[i] and cmp(value, currHead.Next[i].Value) > 0:
-				currHead = currHead.Next[i] # traverse on level i
-			updated[i] = currHead
+		cur = self.head
 		
-		currHead = currHead.Next[0] # ???
-		if currHead and value == currHead.Value:
-			return True
-		
-		# update list level if node becomes a new head
-		if node.level > self._levels:
-			for i in xrange(self._levels, node.level):
-				updated[i] = self._head
-			self._levels = node.level
+		for i in xrange(node.Level - 1, -1, -1): # from top to bottom
+			while cur.Next[i] and cmp(value, cur.Next[i].Value) >= 0:
+				cur = cur.Next[i]
+			# reach the position that node.Value < cur.Next[i].Value, insert here
+			node.Next[i] = cur.Next[i]
+			cur.Next[i] = node
 
-		# insert into the SkipList (after updated[i])
-		for i in xrange(node.level):
-			node.Next[i] = updated[i].Next[i]
-			updated[i].Next[i] = node
-		
-		self._n += 1
-
-		# print l
+		self.n += 1
 		return True
 
 
@@ -58,14 +41,16 @@ class SkipList(object):
 		level = 1
 		while uniform(0,1) < 0.5 and level < self.maxLevel:
 			level += 1
-			if level == self._levels + 1: break
+			if level == self.levels + 1: 
+				self.levels += 1
+				break
 		return level
 
 
 	def contains(self, value):
-		cur = self._head
+		cur = self.head
 
-		for i in xrange(self._levels -1, -1, -1):
+		for i in xrange(self.levels -1, -1, -1):
 			while cur.Next[i] and cmp(value, cur.Next[i].Value) >= 0:
 				if cur.Next[i].Value == value: return True
 				cur = cur.Next[i]
@@ -73,10 +58,10 @@ class SkipList(object):
 				
 
 	def delete(self, value):
-		cur = self._head
+		cur = self.head
 		found = False
 
-		for i in xrange(self._levels - 1, -1, -1):
+		for i in xrange(self.levels - 1, -1, -1):
 			while cur.Next[i] and cmp(value, cur.Next[i].Value) >= 0:
 				if cur.Next[i].Value == value: 
 					found = True
@@ -88,8 +73,8 @@ class SkipList(object):
 
 	def __str__(self):
 		mystr = ""
-		for level in xrange(self._levels):
-			cur = self._head.Next[level]
+		for level in xrange(self.levels):
+			cur = self.head.Next[level]
 			values = []
 			while cur:
 				values.append(str(cur.Value))
@@ -100,17 +85,17 @@ class SkipList(object):
 	
 	
 	def __len__(self):
-		return self._n
+		return self.n
 
 		
 
 if __name__ == '__main__':
 	import random
-	l = SkipList()
+	l = SkipList(16)
 	ran = lambda : random.randint(-100,200)
 	seq = lambda x: x 
-	for i in [seq(x) for x in xrange(10)]:
+	for i in [seq(x) for x in xrange(1000)]:
 		l.insert(i)
-	print l
-	l.delete(3)
-	print l
+	print l.levels
+	# l.delete(3)
+	# print l
